@@ -1,0 +1,16 @@
+pycache/
+.pycod
+venv/
+.env
+.log
+.tmp
+.bak
+.pkl
+.streamlit/secrets.toml
+.DSStore
+Thumbs.db
+.idea/
+.vscode/
+.pytestcache/
+.coverage
+coverage.xml
