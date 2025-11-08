@@ -77,10 +77,10 @@ Financial fraud costs billions annually, but traditional fraud detection systems
 ```
 ┌─────────────────────────────────────────────────────┐
 │          Streamlit Dashboard (app.py)               │
-│  ┌──────────┐  ┌──────────┐  ┌────────────────┐   │
-│  │Dashboard │  │Real-time │  │  Analytics     │   │
-│  │Overview  │  │Detection │  │  & Metrics     │   │
-│  └──────────┘  └──────────┘  └────────────────┘   │
+│  ┌──────────┐  ┌──────────┐  ┌────────────────┐     │
+│  │Dashboard │  │Real-time │  │  Analytics     │     │
+│  │Overview  │  │Detection │  │  & Metrics     │     │
+│  └──────────┘  └──────────┘  └────────────────┘     │
 └───────────────────┬─────────────────────────────────┘
                     │
         ┌───────────┴───────────┐
@@ -535,3 +535,4 @@ This project is submitted for the CyborgDB Hackathon 2025.
 **Built with ❤️ By Tanu Chandravanshi for CyborgDB Hackathon 2025**
 
 **Status:** ✅ Complete | **Accuracy:** 98.5%+ | **Encryption:** Enabled | **Performance:** Optimized
+
