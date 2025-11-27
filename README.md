@@ -32,7 +32,7 @@ SecureMindAI is an advanced fraud detection system that combines cutting-edge ma
 
 Financial fraud costs billions annually, but traditional fraud detection systems often compromise data privacy. SecureMindAI solves this by:
 - ✅ Detecting fraud with >98% accuracy
-- ✅ Keeping all data encrypted at rest and in-use
+- ✅ Keeping all data encrypted at rest and in use
 - ✅ Providing real-time detection (<10ms latency)
 - ✅ Maintaining full auditability and transparency
 
@@ -340,7 +340,7 @@ SecureMindAI_EncryptedFraudDetectionSystem/
    - Apply temporal, categorical, and interaction features
 
 3. **Embedding Generation**
-   - Create normalized feature vector
+   - Create a normalized feature vector
    - Dimensionality: 19
 
 4. **Encryption**
@@ -361,17 +361,22 @@ SecureMindAI_EncryptedFraudDetectionSystem/
 
 8. **Alert Generation**
    - Trigger alert if fraud score > 50%
-   - Log to dashboard and history
+   - Log in to the dashboard and history
 
 ---
 
 ## 🔒 Security Features
 
 ✅ **Encryption-in-Use:** All vectors encrypted before storage
+
 ✅ **Zero-Knowledge:** Database operations on encrypted data
+
 ✅ **Secure Key Management:** Fernet symmetric encryption
+
 ✅ **Privacy-Preserving:** No plaintext data exposure
+
 ✅ **Audit Trail:** Complete transaction logging
+
 ✅ **Access Control:** Encrypted metadata protection
 
 ---
@@ -532,7 +537,6 @@ This project is submitted for the CyborgDB Hackathon 2025.
 - Manual backup/restore process
 - Limited monitoring/observability hooks
 
-**Built with ❤️ By Tanu Chandravanshi for CyborgDB Hackathon 2025**
 
-**Status:** ✅ Complete | **Accuracy:** 98.5%+ | **Encryption:** Enabled | **Performance:** Optimized
+
 
