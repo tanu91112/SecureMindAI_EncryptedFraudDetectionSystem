@@ -31,10 +31,10 @@ SecureMindAI is an advanced fraud detection system that combines cutting-edge ma
 ### Problem Statement
 
 Financial fraud costs billions annually, but traditional fraud detection systems often compromise data privacy. SecureMindAI solves this by:
-- ✅ Detecting fraud with >98% accuracy
-- ✅ Keeping all data encrypted at rest and in use
-- ✅ Providing real-time detection (<10ms latency)
-- ✅ Maintaining full auditability and transparency
+- Detecting fraud with >98% accuracy
+- Keeping all data encrypted at rest and in use
+- Providing real-time detection (<10ms latency)
+- Maintaining full auditability and transparency
 
 ---
 
@@ -275,19 +275,19 @@ SecureMindAI_EncryptedFraudDetectionSystem/
 
 ### Model Performance
 
-| Metric | Target | Achieved |
-|--------|--------|----------|
-| Accuracy | >98% | **98.5%+** |
-| Precision | >95% | **97%+** |
-| Recall | >90% | **92%+** |
-| F1-Score | >93% | **94%+** |
+| Metric   | Target | Achieved   |
+|--------  |--------|----------  |
+| Accuracy | >98%   | **98.5%+** |
+| Precision| >95%   | **97%+**   |
+| Recall   | >90%   | **92%+**   |
+| F1-Score | >93%   | **94%+**   |
 
 ### Database Performance
 
-| Operation | Latency | Throughput |
-|-----------|---------|------------|
-| Insert | <1ms | 1000+ vectors/sec |
-| Query | <10ms | 100+ queries/sec |
+| Operation | Latency | Throughput        |
+|-----------|---------|------------       |
+| Insert    | <1ms    | 1000+ vectors/sec |
+| Query     | <10ms   | 100+ queries/sec  |
 | Batch Insert | ~0.5ms/vector | 2000+ vectors/sec |
 
 ### Dataset Statistics
@@ -367,17 +367,17 @@ SecureMindAI_EncryptedFraudDetectionSystem/
 
 ## 🔒 Security Features
 
-✅ **Encryption-in-Use:** All vectors encrypted before storage
+ **Encryption-in-Use:** All vectors encrypted before storage
 
-✅ **Zero-Knowledge:** Database operations on encrypted data
+ **Zero-Knowledge:** Database operations on encrypted data
 
-✅ **Secure Key Management:** Fernet symmetric encryption
+ **Secure Key Management:** Fernet symmetric encryption
 
-✅ **Privacy-Preserving:** No plaintext data exposure
+ **Privacy-Preserving:** No plaintext data exposure
 
-✅ **Audit Trail:** Complete transaction logging
+ **Audit Trail:** Complete transaction logging
 
-✅ **Access Control:** Encrypted metadata protection
+ **Access Control:** Encrypted metadata protection
 
 ---
 
@@ -412,29 +412,29 @@ SecureMindAI_EncryptedFraudDetectionSystem/
 ## 📈 Evaluation Criteria Alignment
 
 ### 1. **Innovation & Creativity**
-- ✅ Novel ensemble approach with encrypted vectors
-- ✅ Real-time fraud detection with <10ms latency
-- ✅ Privacy-preserving ML architecture
+-  Novel ensemble approach with encrypted vectors
+-  Real-time fraud detection with <10ms latency
+-  Privacy-preserving ML architecture
 
 ### 2. **Technical Implementation**
-- ✅ Production-ready code structure
-- ✅ Comprehensive error handling
-- ✅ Modular and extensible design
+-  Production-ready code structure
+-  Comprehensive error handling
+-  Modular and extensible design
 
 ### 3. **Use of CyborgDB**
-- ✅ Encrypted vector storage and retrieval
-- ✅ Similarity search on encrypted data
-- ✅ Performance optimization
+-  Encrypted vector storage and retrieval
+-  Similarity search on encrypted data
+-  Performance optimization
 
 ### 4. **Real-World Impact**
-- ✅ Addresses $32B annual fraud problem
-- ✅ Privacy-compliant (GDPR, CCPA ready)
-- ✅ Scalable to millions of transactions
+-  Addresses $32B annual fraud problem
+-  Privacy-compliant (GDPR, CCPA ready)
+-  Scalable to millions of transactions
 
 ### 5. **Presentation Quality**
-- ✅ Interactive dashboard
-- ✅ Clear documentation
-- ✅ Live demo capability
+-  Interactive dashboard
+-  Clear documentation
+-  Live demo capability
 
 ---
 
@@ -536,6 +536,7 @@ This project is submitted for the CyborgDB Hackathon 2025.
 - No automatic failover/HA
 - Manual backup/restore process
 - Limited monitoring/observability hooks
+
 
 
 
