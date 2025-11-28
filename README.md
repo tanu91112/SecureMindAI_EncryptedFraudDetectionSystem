@@ -31,6 +31,7 @@ SecureMindAI is an advanced fraud detection system that combines cutting-edge ma
 ### Problem Statement
 
 Financial fraud costs billions annually, but traditional fraud detection systems often compromise data privacy. 
+
 SecureMindAI solves this by:
 - Detecting fraud with >98% accuracy
 - Keeping all data encrypted at rest and in use
@@ -537,6 +538,7 @@ This project is submitted for the CyborgDB Hackathon 2025.
 - No automatic failover/HA
 - Manual backup/restore process
 - Limited monitoring/observability hooks
+
 
 
 
