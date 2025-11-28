@@ -109,6 +109,13 @@ SecureMindAI solves this by:
 ```
 
 ---
+<table>
+<td align="center">
+      <img src="Images/CyborgDB_Architecture diagram.png" width="900" />
+      <p>CyborgDB_Architecture diagram</p>
+    </td>
+</table>
+
 
 ## 💻 Installation
 
@@ -538,6 +545,7 @@ This project is submitted for the CyborgDB Hackathon 2025.
 - No automatic failover/HA
 - Manual backup/restore process
 - Limited monitoring/observability hooks
+
 
 
 
