@@ -146,10 +146,15 @@ streamlit run app.py
 
 ## 🏆 Achievement Highlights
 
+
 ✅ **99.95% Accuracy** - Exceeds requirement by 1.95%
+
 ✅ **<25ms Latency** - 4x faster than required
+
 ✅ **Production Ready** - Complete testing & docs
+
 ✅ **Encryption Enabled** - Full privacy protection
+
 ✅ **Interactive Dashboard** - 4 modes, 10+ charts
 
 ---
@@ -213,3 +218,4 @@ streamlit run app.py
 ---
 
 **Built for CyborgDB Hackathon 2025** 🚀
+
