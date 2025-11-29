@@ -327,17 +327,27 @@ Reasons:
 ## 🎓 Lessons Learned
 
 ### What Worked Well
+
 ✅ Ensemble approach significantly improved accuracy
+
 ✅ Feature engineering was critical (19 features from 7 raw)
+
 ✅ Encryption overhead was minimal (<1ms per operation)
+
 ✅ Streamlit provided rapid UI development
+
 ✅ Modular architecture enabled easy testing
 
 ### Challenges Overcome
+
 ✅ Balancing accuracy with real-time performance
+
 ✅ Handling imbalanced dataset (98% normal, 2% fraud)
+
 ✅ Optimizing encrypted similarity search
+
 ✅ Maintaining cache consistency with encryption
+
 ✅ Type safety with dynamic feature extraction
 
 ---
@@ -415,5 +425,6 @@ Reasons:
 
 ---
 
-*Built with ❤️ for CyborgDB Hackathon 2025*
+*CyborgDB Hackathon 2025*
 *Empowering FinTech Security with AI & Encryption*
+
