@@ -187,16 +187,6 @@ pip install streamlit --upgrade
 streamlit run app.py
 ```
 
----
-
-## 📞 Support
-
-- **Documentation:** README.md
-- **Technical Details:** PROJECT_SUMMARY.md
-- **Verification:** VERIFICATION_REPORT.txt
-- **This Guide:** QUICK_REFERENCE.md
-
----
 
 ## ⚡ One-Line Commands
 
@@ -218,4 +208,5 @@ streamlit run app.py
 ---
 
 **Built for CyborgDB Hackathon 2025** 🚀
+
 
