@@ -18,7 +18,6 @@
 - [Project Structure](#project-structure)
 - [Technical Details](#technical-details)
 - [Performance Metrics](#performance-metrics)
-- [Demo Screenshots](#demo-screenshots)
 - [Future Enhancements](#future-enhancements)
 - [License](#license)
 
@@ -75,38 +74,6 @@ SecureMindAI solves this by:
 ---
 
 ## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────┐
-│          Streamlit Dashboard (app.py)               │
-│  ┌──────────┐  ┌──────────┐  ┌────────────────┐     │
-│  │Dashboard │  │Real-time │  │  Analytics     │     │
-│  │Overview  │  │Detection │  │  & Metrics     │     │
-│  └──────────┘  └──────────┘  └────────────────┘     │
-└───────────────────┬─────────────────────────────────┘
-                    │
-        ┌───────────┴───────────┐
-        │                       │
-┌───────▼──────────┐   ┌───────▼──────────────┐
-│  Fraud Model     │   │  CyborgDB Simulator  │
-│  (fraud_model.py)│   │  (cyborg_test.py)    │
-│                  │   │                      │
-│ • Feature Eng.   │   │ • Encryption Layer   │
-│ • ML Models      │   │ • Vector Storage     │
-│ • Embeddings     │   │ • Similarity Search  │
-└──────────────────┘   └──────────────────────┘
-        │                       │
-        └───────────┬───────────┘
-                    │
-        ┌───────────▼───────────┐
-        │  Transaction Dataset  │
-        │  (transactions.csv)   │
-        │                       │
-        │  • 10,000 samples     │
-        │  • 2% fraud ratio     │
-        │  • Realistic patterns │
-        └───────────────────────┘
-```
 
 ---
 <table>
@@ -541,10 +508,8 @@ This project is submitted for the CyborgDB Hackathon 2025.
 3. Distributed vector sharding for scale
 4. Streaming insert API for real-time data
 
-### Production Deployment Gaps:
-- No automatic failover/HA
-- Manual backup/restore process
-- Limited monitoring/observability hooks
+
+
 
 
 
