@@ -247,7 +247,7 @@ SecureMindAI_EncryptedFraudDetectionSystem/
 
 ---
 
-## 📊 Performance Metrics
+## 📊 Benchmarks & Performance
 
 ### Model Performance
 
@@ -507,6 +507,7 @@ This project is submitted for the CyborgDB Hackathon 2025.
 2. Built-in disk persistence option
 3. Distributed vector sharding for scale
 4. Streaming insert API for real-time data
+
 
 
 
