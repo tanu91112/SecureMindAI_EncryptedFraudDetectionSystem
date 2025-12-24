@@ -114,7 +114,7 @@ def main():
     # Header
     st.markdown('<div class="main-header">🔒 SecureMindAI Fraud Detection System</div>', 
                 unsafe_allow_html=True)
-    st.markdown("### AI-Powered Fraud Detection with Encryption-in-Use Vector Database")
+    st.markdown("### AI-Powered Fraud Detection with Encrypted Vector Storage & Controlled Access")
     st.markdown("---")
     
     # Initialize session state
@@ -627,7 +627,7 @@ def performance_metrics(model, vector_db):
     
     with col2:
         st.success(f"✅ Cache Status: {db_stats['cache_status'].upper()}")
-        st.info("🛡️ Data protected at rest and in-use")
+        st.info("🛡️Data encrypted at rest with scoped in-memory access")
     
     # Model metrics
     if model.metrics:
