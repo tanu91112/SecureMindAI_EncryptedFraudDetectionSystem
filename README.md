@@ -85,23 +85,6 @@ Financial fraud costs billions annually, but traditional fraud detection systems
 
 ---
 
-## 🔄 End-to-End Workflow
-
-Transaction Stream → Feature Encoder (ML Model)
-        ↓
-Local Encryption Layer (Fernet AES-128 CBC)
-        ↓
-CyborgDB Encrypted Vector Store
-        ↓
-Scoped k-NN Similarity Search with Ephemeral In-Memory Decryption
-        ↓
-Anomaly Detection Engine (Isolation Forest)
-        ↓
-Risk Scoring + Alerting System
-        ↓
-Encrypted Audit Log (Compliance Ready)
-
-
 
 ## 🏗️ Architecture
 
@@ -529,6 +512,7 @@ This project is submitted for the CyborgDB Hackathon 2025.
 - No automatic failover/HA
 - Manual backup/restore process
 - Limited monitoring/observability hooks
+
 
 
 
