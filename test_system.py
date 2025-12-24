@@ -76,7 +76,7 @@ def main():
         print(f"  True Positives:  {metrics['true_positives']:,}")
         
         if accuracy >= 98:
-            print(f"\n✓✓✓ ACCURACY REQUIREMENT MET: {accuracy:.2f}% >= 98% ✓✓✓")
+            print(f"\n✓ Accuracy verified on synthetic hold-out split: {accuracy:.2f}% >= 98% ✓✓✓")
         else:
             print(f"\n✗✗✗ ACCURACY REQUIREMENT NOT MET: {accuracy:.2f}% < 98% ✗✗✗")
             
@@ -227,9 +227,9 @@ def main():
 Key Achievements:
   • Accuracy: {accuracy:.2f}% (exceeds 98% requirement)
   • Real-time: <100ms detection latency
-  • Privacy: Full encryption-in-use
+  • Privacy: Encrypted at rest with scoped in-memory decryption
   • Scalability: {len(df)/index_time:.0f} vectors/sec indexing
-  • Production-ready: All components functional
+  • Production-ready: All components are functional
 
 SecureMindAI is ready for CyborgDB Hackathon 2025! 🚀
     """)
