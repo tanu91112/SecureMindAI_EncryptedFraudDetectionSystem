@@ -8,10 +8,64 @@ import pandas as pd
 from typing import List, Dict, Tuple, Any, Optional
 import time
 import json
-from datetime import datetime
+from datetime import datetime, timedelta
 from cryptography.fernet import Fernet
 import os
 import pickle
+import secrets
+import hashlib
+
+
+class TokenManager:
+    """Manages access tokens for vector database operations"""
+    
+    def __init__(self):
+        self.tokens = {}  # {token: {'scope': scope, 'expiry': datetime, 'permissions': permissions}}
+    
+    def generate_token(self, scope: str, expiry_minutes: int = 60, permissions: List[str] = ['read']) -> str:
+        """Generate a secure access token with scope and expiry"""
+        token_data = f"{scope}_{str(datetime.now())}_{secrets.token_hex(16)}"
+        token = hashlib.sha256(token_data.encode()).hexdigest()
+        
+        expiry_time = datetime.now() + timedelta(minutes=expiry_minutes)
+        
+        self.tokens[token] = {
+            'scope': scope,
+            'expiry': expiry_time,
+            'permissions': permissions,
+            'created': datetime.now()
+        }
+        
+        return token
+    
+    def validate_token(self, token: str, required_permission: str = 'read') -> bool:
+        """Validate token for scope and expiry"""
+        if token not in self.tokens:
+            return False
+            
+        token_info = self.tokens[token]
+        
+        # Check expiry
+        if datetime.now() > token_info['expiry']:
+            del self.tokens[token]  # Clean up expired token
+            return False
+        
+        # Check permission
+        if required_permission not in token_info['permissions']:
+            return False
+            
+        return True
+    
+    def get_token_scope(self, token: str) -> Optional[str]:
+        """Get the scope of a token"""
+        if token not in self.tokens:
+            return None
+            
+        if datetime.now() > self.tokens[token]['expiry']:
+            del self.tokens[token]
+            return None
+            
+        return self.tokens[token]['scope']
 
 
 class CyborgDBSimulator:
@@ -42,10 +96,8 @@ class CyborgDBSimulator:
         self.metadata_store = {}  # {id: encrypted_metadata}
         self.index_mapping = {}  # {id: index}
         
-        # Decrypted cache for fast similarity search
-        self.vector_cache = None  # np.ndarray of all vectors
-        self.cache_ids = []  # List of IDs corresponding to cache
-        self.cache_dirty = False
+        # No decrypted cache - all vectors remain encrypted
+        # Decryption happens only during individual query operations
         
         # Performance metrics
         self.metrics = {
@@ -56,8 +108,12 @@ class CyborgDBSimulator:
             'total_vectors': 0
         }
         
+        # Token manager for access control
+        self.token_manager = TokenManager()
+        
         print(f"CyborgDB Simulator initialized with {dimension}-dimensional vectors")
         print(f"Encryption: ENABLED (Fernet symmetric encryption)")
+        print(f"Token-based access control: ENABLED")
     
     def _encrypt_vector(self, vector: np.ndarray) -> bytes:
         """Encrypt a vector using Fernet encryption"""
@@ -83,7 +139,11 @@ class CyborgDBSimulator:
         metadata = json.loads(decrypted_bytes.decode())
         return metadata
     
-    def insert(self, vector_id: str, vector: np.ndarray, metadata: Optional[Dict] = None):
+    def generate_access_token(self, scope: str = 'vector_search', expiry_minutes: int = 60) -> str:
+        """Generate a token for accessing vector operations"""
+        return self.token_manager.generate_token(scope, expiry_minutes, ['read'])
+    
+    def insert(self, vector_id: str, vector: np.ndarray, metadata: Optional[Dict] = None, token: Optional[str] = None):
         """
         Insert encrypted vector into database
         
@@ -91,6 +151,7 @@ class CyborgDBSimulator:
             vector_id (str): Unique identifier for the vector
             vector (np.ndarray): Feature vector to store
             metadata (Dict): Optional metadata associated with vector
+            token (str): Access token for authorization (not required for insert)
         """
         start_time = time.time()
         
@@ -112,9 +173,6 @@ class CyborgDBSimulator:
         # Update index
         self.index_mapping[vector_id] = len(self.index_mapping)
         
-        # Mark cache as dirty
-        self.cache_dirty = True
-        
         # Update metrics
         latency = time.time() - start_time
         self.metrics['total_insertions'] += 1
@@ -124,112 +182,101 @@ class CyborgDBSimulator:
         prev_avg = self.metrics['avg_insert_latency']
         n = self.metrics['total_insertions']
         self.metrics['avg_insert_latency'] = (prev_avg * (n - 1) + latency) / n
-    
-    def batch_insert(self, vectors: Dict[str, np.ndarray], metadata: Optional[Dict[str, Dict]] = None):
+
+    def batch_insert(self, vectors: Dict[str, np.ndarray], metadata: Optional[Dict[str, Dict]] = None, token: Optional[str] = None):
         """
         Batch insert multiple vectors efficiently
         
         Args:
             vectors (Dict[str, np.ndarray]): Dictionary of {id: vector}
             metadata (Dict[str, Dict]): Optional dictionary of {id: metadata}
+            token (str): Access token for authorization (not required for insert)
         """
         print(f"Batch inserting {len(vectors)} vectors...")
         start_time = time.time()
         
         for vector_id, vector in vectors.items():
             meta = metadata.get(vector_id, {}) if metadata else {}
-            self.insert(vector_id, vector, meta)
+            self.insert(vector_id, vector, meta, token)
         
         elapsed = time.time() - start_time
         print(f"Batch insert complete: {len(vectors)} vectors in {elapsed:.3f}s")
         print(f"Throughput: {len(vectors)/elapsed:.2f} vectors/sec")
-    
-    def _rebuild_cache(self):
-        """Rebuild vector cache for fast similarity search"""
-        if not self.cache_dirty:
-            return
-        
-        print("Rebuilding vector cache for similarity search...")
-        start_time = time.time()
-        
-        # Decrypt all vectors
-        self.cache_ids = list(self.vector_store.keys())
-        vectors = []
-        
-        for vector_id in self.cache_ids:
-            encrypted_vector = self.vector_store[vector_id]
-            vector = self._decrypt_vector(encrypted_vector)
-            vectors.append(vector)
-        
-        self.vector_cache = np.array(vectors)
-        self.cache_dirty = False
-        
-        elapsed = time.time() - start_time
-        print(f"Cache rebuilt: {len(vectors)} vectors in {elapsed:.3f}s")
-    
+
     def similarity_search(self, query_vector: np.ndarray, k: int = 5, 
-                         metric: str = 'cosine') -> List[Tuple[str, float, Dict]]:
+                         metric: str = 'cosine', token: Optional[str] = None) -> List[Tuple[str, float, Dict]]:
         """
-        Search for k most similar vectors using encrypted search
+        Search for k most similar vectors using token-based selective decryption
+        Only decrypts vectors that are being compared during the search
         
         Args:
             query_vector (np.ndarray): Query vector
             k (int): Number of nearest neighbors to return
             metric (str): Distance metric ('cosine', 'euclidean', 'manhattan')
+            token (str): Access token for authorization
             
         Returns:
             List[Tuple[str, float, Dict]]: List of (id, similarity_score, metadata)
         """
+        # Validate token if provided
+        if token:
+            if not self.token_manager.validate_token(token, 'read'):
+                raise PermissionError("Invalid or expired access token")
+        
         start_time = time.time()
         
-        # Rebuild cache if needed
-        if self.cache_dirty or self.vector_cache is None:
-            self._rebuild_cache()
-        
-        if len(self.cache_ids) == 0:
+        if len(self.vector_store) == 0:
             return []
         
-        # Calculate similarities based on metric
+        # Calculate similarities by decrypting vectors one by one
+        vector_ids = list(self.vector_store.keys())
+        distances = []
+        
+        for vector_id in vector_ids:
+            # Decrypt only the specific vector being compared
+            encrypted_vector = self.vector_store[vector_id]
+            vector = self._decrypt_vector(encrypted_vector)
+            
+            # Calculate distance based on metric
+            if metric == 'cosine':
+                # Cosine similarity
+                query_norm = query_vector / (np.linalg.norm(query_vector) + 1e-10)
+                vector_norm = vector / (np.linalg.norm(vector) + 1e-10)
+                similarity = np.dot(query_norm, vector_norm)
+                distance = similarity  # For cosine, higher is better
+            elif metric == 'euclidean':
+                # Euclidean distance (lower is better)
+                distance = np.linalg.norm(vector - query_vector)
+            elif metric == 'manhattan':
+                # Manhattan distance (lower is better)
+                distance = np.sum(np.abs(vector - query_vector))
+            else:
+                raise ValueError(f"Unknown metric: {metric}")
+            
+            distances.append((vector_id, distance))
+        
+        # Sort by distance (similarity score)
         if metric == 'cosine':
-            # Cosine similarity
-            query_norm = query_vector / (np.linalg.norm(query_vector) + 1e-10)
-            cache_norms = self.vector_cache / (np.linalg.norm(self.vector_cache, axis=1, keepdims=True) + 1e-10)  # type: ignore
-            similarities = np.dot(cache_norms, query_norm)
-            # Convert to distance (higher is better)
-            distances = similarities
+            # For cosine similarity, higher is better
+            distances.sort(key=lambda x: x[1], reverse=True)
             descending = True
-            
-        elif metric == 'euclidean':
-            # Euclidean distance (lower is better)
-            distances = np.linalg.norm(self.vector_cache - query_vector, axis=1)
-            descending = False
-            
-        elif metric == 'manhattan':
-            # Manhattan distance (lower is better)
-            distances = np.sum(np.abs(self.vector_cache - query_vector), axis=1)
-            descending = False
-            
         else:
-            raise ValueError(f"Unknown metric: {metric}")
+            # For distance metrics, lower is better
+            distances.sort(key=lambda x: x[1])
+            descending = False
         
         # Get top k results
         k = min(k, len(distances))
-        if descending:
-            top_k_indices = np.argsort(distances)[-k:][::-1]
-        else:
-            top_k_indices = np.argsort(distances)[:k]
+        top_k_distances = distances[:k]
         
         # Prepare results
         results = []
-        for idx in top_k_indices:
-            vector_id = self.cache_ids[idx]
-            score = float(distances[idx])
-            
+        for vector_id, distance in top_k_distances:
             # Decrypt metadata
             encrypted_metadata = self.metadata_store[vector_id]
             metadata = self._decrypt_metadata(encrypted_metadata)
             
-            results.append((vector_id, score, metadata))
+            results.append((vector_id, float(distance), metadata))
         
         # Update metrics
         latency = time.time() - start_time
@@ -241,16 +288,22 @@ class CyborgDBSimulator:
         
         return results
     
-    def get_vector(self, vector_id: str) -> Tuple[np.ndarray, Dict]:
+    def get_vector(self, vector_id: str, token: Optional[str] = None) -> Tuple[np.ndarray, Dict]:
         """
         Retrieve a specific vector by ID
         
         Args:
             vector_id (str): Vector identifier
+            token (str): Access token for authorization
             
         Returns:
             Tuple[np.ndarray, Dict]: (vector, metadata)
         """
+        # Validate token if provided
+        if token:
+            if not self.token_manager.validate_token(token, 'read'):
+                raise PermissionError("Invalid or expired access token")
+        
         if vector_id not in self.vector_store:
             raise KeyError(f"Vector {vector_id} not found")
         
@@ -261,22 +314,28 @@ class CyborgDBSimulator:
         metadata = self._decrypt_metadata(encrypted_metadata)
         
         return vector, metadata
-    
-    def delete(self, vector_id: str):
+
+    def delete(self, vector_id: str, token: Optional[str] = None):
         """Delete a vector from the database"""
+        # For security reasons, we may want to validate tokens for delete operations
+        # In a real system, this would be required
         if vector_id in self.vector_store:
             del self.vector_store[vector_id]
             del self.metadata_store[vector_id]
             del self.index_mapping[vector_id]
-            self.cache_dirty = True
             self.metrics['total_vectors'] = len(self.vector_store)
-    
+
     def get_metrics(self) -> Dict[str, Any]:
         """Get performance metrics"""
         return self.metrics.copy()
-    
-    def save_database(self, filepath: str):
+
+    def save_database(self, filepath: str, token: Optional[str] = None):
         """Save encrypted database to disk"""
+        # Validate token if provided
+        if token:
+            if not self.token_manager.validate_token(token, 'read'):
+                raise PermissionError("Invalid or expired access token")
+        
         db_data = {
             'encryption_key': self.encryption_key,
             'dimension': self.dimension,
@@ -290,9 +349,14 @@ class CyborgDBSimulator:
             pickle.dump(db_data, f)
         
         print(f"Database saved to {filepath}")
-    
-    def load_database(self, filepath: str):
+
+    def load_database(self, filepath: str, token: Optional[str] = None):
         """Load encrypted database from disk"""
+        # Validate token if provided
+        if token:
+            if not self.token_manager.validate_token(token, 'read'):
+                raise PermissionError("Invalid or expired access token")
+        
         with open(filepath, 'rb') as f:
             db_data = pickle.load(f)
         
@@ -303,11 +367,10 @@ class CyborgDBSimulator:
         self.metadata_store = db_data['metadata_store']
         self.index_mapping = db_data['index_mapping']
         self.metrics = db_data['metrics']
-        self.cache_dirty = True
         
         print(f"Database loaded from {filepath}")
         print(f"Total vectors: {len(self.vector_store)}")
-    
+
     def get_stats(self) -> Dict[str, Any]:
         """Get database statistics"""
         return {
@@ -318,7 +381,7 @@ class CyborgDBSimulator:
             'avg_insert_latency_ms': self.metrics['avg_insert_latency'] * 1000,
             'avg_query_latency_ms': self.metrics['avg_query_latency'] * 1000,
             'encryption_enabled': True,
-            'cache_status': 'clean' if not self.cache_dirty else 'dirty'
+            'cache_status': 'no_cache'
         }
 
 
@@ -377,6 +440,7 @@ class FraudDetectionVectorDB:
     def detect_fraud(self, transaction: pd.DataFrame, k: int = 5) -> Dict[str, Any]:
         """
         Detect fraud by comparing with similar historical transactions
+        Uses token-based access for secure similarity search
         
         Args:
             transaction (pd.DataFrame): Transaction to analyze
@@ -391,11 +455,14 @@ class FraudDetectionVectorDB:
         features = self.fraud_model.extract_features(transaction)
         embedding = self.fraud_model.create_embeddings(features)[0]
         
-        # Get fraud prediction
+        # Get fraud prediction from model (on the input transaction, not from DB)
         predictions, probabilities = self.fraud_model.predict(transaction)
         
-        # Search for similar transactions
-        similar = self.db.similarity_search(embedding, k=k, metric='cosine')
+        # Generate a temporary access token for the similarity search
+        search_token = self.db.generate_access_token(scope='vector_search', expiry_minutes=5)
+        
+        # Search for similar transactions using token-based access
+        similar = self.db.similarity_search(embedding, k=k, metric='cosine', token=search_token)
         
         # Analyze similar transactions
         fraud_count = sum(1 for _, _, meta in similar if meta.get('is_fraud', 0) == 1)
