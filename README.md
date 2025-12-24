@@ -514,6 +514,9 @@ This project is submitted for the CyborgDB Hackathon 2025.
 - Limited monitoring/observability hooks
 
 
+## Security Notes / Advanced Considerations
+
+Fully homomorphic encryption (FHE) would allow similarity searches to be performed directly on encrypted vectors without any decryption, such techniques are research-level and impractical for real-time systems due to extreme computational overhead. SecureMind AI instead adopts a pragmatic and secure design using selective, token-based decryption, achieving strong fraud detection performance while maintaining strict compliance and minimal data exposure.
 
 
 
