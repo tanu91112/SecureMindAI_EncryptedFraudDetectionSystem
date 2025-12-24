@@ -374,28 +374,30 @@ Performance metrics are measured on a local development environment using a Cybo
 ---
 ## 🔐 Encryption clarification section (Design Guarantee)
 
-SecureMindAI follows a privacy-preserving encrypted vector search architecture
+- SecureMindAI follows a privacy-preserving encrypted vector search architecture
 where sensitive data is never persisted in plaintext at rest, in transit, or inside the vector database.
  
-Plaintext feature vectors are decrypted only ephemerally in volatile memory
-during a single similarity computation. Once the operation completes, all
-plaintext data is immediately discarded.
+- Plaintext feature vectors are decrypted only ephemerally in volatile memory during a single similarity computation.
+  Once the operation completes, allplaintext data is immediately discarded.
 
-The fraud detection models do not have blanket access to transaction embeddings.
-Decryption is scoped to the execution context of an individual query, ensuring
-cryptographic control over when and how data is accessed.
+- The fraud detection models do not have blanket access to transaction embeddings.
+- Decryption is scoped to the execution context of an individual query, ensuring cryptographic control over when and how data is accessed.
 
-Additionally, fraud predictions are generated using an **ensemble of supervised Random Forest and unsupervised Isolation Forest models**, providing both pattern-based and anomaly-based detection while respecting strict data privacy.
+- Additionally, fraud predictions are generated using an **ensemble of supervised Random Forest and unsupervised Isolation Forest models**, providing both pattern-based and anomaly-based detection while respecting strict data privacy.
 
 
 ## 🔒 Security Features
 
-✅ **Encrypted Vector Search**: All vectors encrypted at rest with scoped,
-ephemeral decryption during authorized similarity queries
+✅ **Encrypted Vector Search**: All vectors encrypted at rest with scoped, ephemeral decryption during authorized similarity queries
+
 ✅ **Scoped Decryption**: Plaintext exists only ephemerally in memory during queries
+
 ✅ **Secure Key Management:** Fernet symmetric encryption
+
 ✅ **Privacy-Preserving:** No plaintext data exposure
+
 ✅ **Audit Trail:** Complete transaction logging
+
 ✅ **Access Control:** Encrypted metadata protection
 
 ---
@@ -527,6 +529,7 @@ This project is submitted for the CyborgDB Hackathon 2025.
 - No automatic failover/HA
 - Manual backup/restore process
 - Limited monitoring/observability hooks
+
 
 
 
