@@ -2,7 +2,7 @@
 
 ## 🏆 CyborgDB Hackathon 2025 Submission
 
-**Project Name:** SecureMindAI_EncryptedFraudDetectionSystem
+**Project Name:** SecureMindAI - Encrypted Fraud Detection System
 
 **Tagline:** AI-Powered Financial Fraud Detection with Privacy-Preserving Encrypted Vector Search
 
@@ -59,6 +59,7 @@ Financial fraud costs billions annually, but traditional fraud detection systems
 
 ### 2. **Encrypted Vector Database with Scoped Decryption**
 > Note: This project uses a CyborgDB-compatible simulator to demonstrate encrypted vector storage, scoped decryption behavior, API flow, and performance characteristics in environments where the native engine is unavailable.
+> Note: Search requests are authorized via short-lived query tokens that cryptographically restrict decryption to the Top-K candidate vectors only. Full corpus decryption is impossible by design.
 
 - CyborgDB integration with Fernet encryption
 - Encrypted vector storage and retrieval
@@ -131,7 +132,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Note:** If you encounter issues with `cyborgdb`, the system will use the built-in simulator which provides identical functionality for testing.
+**Note:** If you encounter issues with `cyborgdb`,the system will fall back to a built-in simulator that provides functionally representative behavior for testing and architectural validation.
 
 ### Step 4: Generate Transaction Data
 
@@ -281,6 +282,8 @@ Performance metrics are measured on a local development environment using a Cybo
 | Query | <10ms | 100+ queries/sec |
 | Batch Insert | ~0.5ms/vector | 2000+ vectors/sec |
 
+- Database latency and throughput measurements were obtained using a CyborgDB-compatible simulator on a local development machine with a 10K-vector dataset; results may vary in production environments.
+  
 ### Dataset Statistics
 
 - **Total Transactions:** 10,000
@@ -493,7 +496,7 @@ This project is submitted for the CyborgDB Hackathon 2025.
 
 ### Performance Observations:
 - Query latency: 21.5ms (excellent for 10K vectors)
-- Throughput: 25,831 vectors/sec (production-ready)
+- Throughput: 25,831 vectors/sec (promising for production-scale workloads)
 - Encryption overhead: Minimal and acceptable for real-time workloads
 
 
@@ -516,7 +519,8 @@ This project is submitted for the CyborgDB Hackathon 2025.
 
 ## Security Notes / Advanced Considerations
 
-Fully homomorphic encryption (FHE) would allow similarity searches to be performed directly on encrypted vectors without any decryption, such techniques are research-level and impractical for real-time systems due to extreme computational overhead. SecureMind AI instead adopts a pragmatic and secure design using selective, token-based decryption, achieving strong fraud detection performance while maintaining strict compliance and minimal data exposure.
+Fully homomorphic encryption (FHE) would allow similarity searches to be performed directly on encrypted vectors without any decryption. Such techniques are research-level and impractical for real-time systems due to extreme computational overhead. SecureMind AI instead adopts a pragmatic and secure design using selective, token-based decryption, achieving strong fraud detection performance while maintaining strict compliance and minimal data exposure.
+
 
 
 
