@@ -5,7 +5,6 @@
 **Project Name:** SecureMindAI - Encrypted Fraud Detection System
 
 **Tagline:** AI-Powered Financial Fraud Detection with Privacy-Preserving Encrypted Vector Search
-
 ---
 
 ## 📋 Table of Contents
