@@ -6,7 +6,6 @@
 
 **Tagline:** AI-Powered Financial Fraud Detection with Privacy-Preserving Encrypted Vector Search
 ---
-
 ## 📋 Table of Contents
 
 - [Overview](#overview)
