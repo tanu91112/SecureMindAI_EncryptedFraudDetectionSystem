@@ -2,7 +2,6 @@
 SecureMindAI Fraud Detection System - Streamlit Dashboard
 Real-time fraud detection visualization with encrypted vector database
 """
-
 import streamlit as st
 import pandas as pd
 import numpy as np
